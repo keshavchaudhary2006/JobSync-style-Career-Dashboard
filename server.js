@@ -23,4 +23,12 @@ const connectDB = async () => {
   }
 };
 
+mongoose.connection.on('disconnected', () => {
+  console.warn('[Database Warning] MongoDB disconnected.');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error(`[Database Error] Runtime error: ${err.message}`);
+});
+
 module.exports = { app, connectDB };
