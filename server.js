@@ -13,6 +13,24 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to JobSync Career Dashboard API',
+    version: '1.0.0',
+    status: 'Running'
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    database: dbStatus
+  });
+});
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(MONGO_URI);
