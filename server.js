@@ -49,4 +49,22 @@ mongoose.connection.on('error', (err) => {
   console.error(`[Database Error] Runtime error: ${err.message}`);
 });
 
-module.exports = { app, connectDB };
+const startServer = async () => {
+  await connectDB();
+  const server = app.listen(PORT, () => {
+    console.log(`[Server] JobSync Backend is running on http://localhost:${PORT}`);
+  });
+
+  const shutdown = async (signal) => {
+    console.log(`\n[Server] Received ${signal}. Shutting down...`);
+    server.close(async () => {
+      await mongoose.connection.close();
+      process.exit(0);
+    });
+  };
+
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+};
+
+startServer();
