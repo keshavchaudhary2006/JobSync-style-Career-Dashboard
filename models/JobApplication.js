@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const jobApplicationSchema = new mongoose.Schema(
   {
@@ -38,8 +38,12 @@ const jobApplicationSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true
+    timestamps: true // Automatically creates createdAt and updatedAt
   }
 );
+
+// Index for frequent lookups by status and company
+jobApplicationSchema.index({ status: 1 });
+jobApplicationSchema.index({ companyName: 1 });
 
 module.exports = mongoose.model('JobApplication', jobApplicationSchema);
